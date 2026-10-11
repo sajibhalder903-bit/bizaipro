@@ -1,0 +1,163 @@
+[
+  {
+    "slug": "roas-calculator",
+    "name": "ROAS Calculator",
+    "category": "Advertising Calculators",
+    "description": "Calculate return on ad spend instantly.",
+    "type": "roas"
+  },
+  {
+    "slug": "marketing-roi-calculator",
+    "name": "Marketing ROI Calculator",
+    "category": "Advertising Calculators",
+    "description": "Measure the return from marketing activity.",
+    "type": "roi"
+  },
+  {
+    "slug": "cpa-calculator",
+    "name": "CPA Calculator",
+    "category": "Advertising Calculators",
+    "description": "Calculate your cost per acquisition.",
+    "type": "cpa"
+  },
+  {
+    "slug": "cpc-calculator",
+    "name": "CPC Calculator",
+    "category": "Advertising Calculators",
+    "description": "Calculate your average cost per click.",
+    "type": "cpc"
+  },
+  {
+    "slug": "cpm-calculator",
+    "name": "CPM Calculator",
+    "category": "Advertising Calculators",
+    "description": "Calculate cost per thousand impressions.",
+    "type": "cpm"
+  },
+  {
+    "slug": "ctr-calculator",
+    "name": "CTR Calculator",
+    "category": "Advertising Calculators",
+    "description": "Calculate click-through rate.",
+    "type": "ctr"
+  },
+  {
+    "slug": "break-even-roas-calculator",
+    "name": "Break-even ROAS Calculator",
+    "category": "Advertising Calculators",
+    "description": "Find the ROAS needed to cover variable costs.",
+    "type": "breakeven"
+  },
+  {
+    "slug": "profit-margin-calculator",
+    "name": "Profit Margin Calculator",
+    "category": "Business Calculators",
+    "description": "Calculate profit and profit margin.",
+    "type": "margin"
+  },
+  {
+    "slug": "markup-calculator",
+    "name": "Markup Calculator",
+    "category": "Business Calculators",
+    "description": "Compare markup, margin and profit.",
+    "type": "markup"
+  },
+  {
+    "slug": "utm-builder",
+    "name": "UTM Builder",
+    "category": "Tracking Tools",
+    "description": "Build clean campaign tracking URLs.",
+    "type": "utm"
+  },
+  {
+    "slug": "meta-tag-generator",
+    "name": "Meta Tag Generator",
+    "category": "SEO & Content Tools",
+    "description": "Create essential page meta tags.",
+    "type": "meta"
+  },
+  {
+    "slug": "open-graph-generator",
+    "name": "Open Graph Generator",
+    "category": "SEO & Content Tools",
+    "description": "Generate social sharing metadata.",
+    "type": "og"
+  },
+  {
+    "slug": "schema-markup-generator",
+    "name": "Schema Markup Generator",
+    "category": "SEO & Content Tools",
+    "description": "Create JSON-LD from your own details.",
+    "type": "schema"
+  },
+  {
+    "slug": "keyword-cleaner",
+    "name": "Keyword Cleaner",
+    "category": "SEO & Content Tools",
+    "description": "Clean and organize keyword lists locally.",
+    "type": "keywords"
+  },
+  {
+    "slug": "word-counter",
+    "name": "Word & Character Counter",
+    "category": "SEO & Content Tools",
+    "description": "Count words, characters and reading time.",
+    "type": "words"
+  },
+  {
+    "slug": "conversion-rate-calculator",
+    "name": "Conversion Rate Calculator",
+    "category": "Advertising Calculators",
+    "description": "Calculate conversion rate from visits and conversions.",
+    "type": "conversion"
+  },
+  {
+    "slug": "customer-acquisition-cost-calculator",
+    "name": "Customer Acquisition Cost Calculator",
+    "category": "Business Calculators",
+    "description": "Calculate average cost to acquire a customer.",
+    "type": "cac"
+  },
+  {
+    "slug": "customer-lifetime-value-calculator",
+    "name": "Customer Lifetime Value Calculator",
+    "category": "Business Calculators",
+    "description": "Estimate customer value from orders and retention.",
+    "type": "clv"
+  },
+  {
+    "slug": "email-open-rate-calculator",
+    "name": "Email Open Rate Calculator",
+    "category": "Email Marketing Tools",
+    "description": "Calculate email open rate from delivered emails.",
+    "type": "openrate"
+  },
+  {
+    "slug": "email-click-rate-calculator",
+    "name": "Email Click Rate Calculator",
+    "category": "Email Marketing Tools",
+    "description": "Calculate email click rate from delivered emails.",
+    "type": "emailctr"
+  },
+  {
+    "slug": "discount-calculator",
+    "name": "Discount Calculator",
+    "category": "Business Calculators",
+    "description": "Calculate the sale price and savings.",
+    "type": "discount"
+  },
+  {
+    "slug": "sales-tax-calculator",
+    "name": "Sales Tax Calculator",
+    "category": "Business Calculators",
+    "description": "Calculate tax amount and total price.",
+    "type": "tax"
+  },
+  {
+    "slug": "percentage-calculator",
+    "name": "Percentage Calculator",
+    "category": "Business Calculators",
+    "description": "Find what percentage one number is of another.",
+    "type": "percentage"
+  }
+]

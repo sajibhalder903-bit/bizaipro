@@ -1,0 +1,11 @@
+import React from 'react';
+import {hydrateRoot} from 'react-dom/client';
+import App from './App.jsx';
+import './styles.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/700.css';
+import '@fontsource/manrope/600.css';
+import '@fontsource/manrope/800.css';
+const data=JSON.parse(document.getElementById('initial-data').textContent);
+hydrateRoot(document.getElementById('root'),<App data={data}/>);
