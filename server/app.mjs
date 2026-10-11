@@ -12,7 +12,7 @@ import multer from 'multer';
 import sharp from 'sharp';
 import mongoose from 'mongoose';
 import { z } from 'zod';
-import {Post,User,Media,Revision,Audit,Redirect,Setting,getSettings,publishedQuery} from './models.mjs';
+import {Post,User,Media,Revision,Audit,Redirect,Setting,Lead,getSettings,publishedQuery} from './models.mjs';
 import {seoRoutes} from './seo.mjs';
 import {postInput,settingsInput,cleanContent,isReservedSlug,safePath} from './content.mjs';
 
@@ -20,7 +20,20 @@ export function createApp({mongoUrl,secret,siteUrl,production=false,uploadDir,re
  const app=express();
  app.disable('x-powered-by');
  app.set('trust proxy',Number(process.env.TRUST_PROXY||0));
- app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],scriptSrc:["'self'"],styleSrc:["'self'","'unsafe-inline'"],imgSrc:["'self'",'https:','data:','blob:'],connectSrc:["'self'"],objectSrc:["'none'"],frameSrc:["'none'"],upgradeInsecureRequests:production?[]:null}}}));
+ app.use(helmet({
+  contentSecurityPolicy:{
+   directives:{
+    defaultSrc:["'self'"],
+    scriptSrc:["'self'","'unsafe-inline'","https://pagead2.googlesyndication.com","https://*.googlesyndication.com","https://*.google.com","https://adservice.google.com","https://*.doubleclick.net"],
+    styleSrc:["'self'","'unsafe-inline'"],
+    imgSrc:["'self'",'https:','data:','blob:'],
+    connectSrc:["'self'","https://pagead2.googlesyndication.com","https://*.google.com","https://*.googlesyndication.com","https://*.doubleclick.net","https://api.pwnedpasswords.com"],
+    objectSrc:["'none'"],
+    frameSrc:["'self'","https://googleads.g.doubleclick.net","https://*.googlesyndication.com","https://*.google.com"],
+    upgradeInsecureRequests:production?[]:null
+   }
+  }
+ }));
  app.use(compression());
  app.use(express.json({limit:'1mb'}));
  app.use('/assets',express.static(path.resolve('dist/client/assets'),{immutable:true,maxAge:'1y'}));
@@ -37,8 +50,26 @@ export function createApp({mongoUrl,secret,siteUrl,production=false,uploadDir,re
  app.use('/api',(req,res,next)=>{res.set('Cache-Control','no-store');next();});
  app.get('/api/health',(_req,res)=>res.status(mongoose.connection.readyState===1?200:503).json({ok:mongoose.connection.readyState===1}));
  app.get('/api/auth/session',(req,res)=>{req.session.csrf ||= crypto.randomBytes(32).toString('hex');res.json({user:req.session.user||null,csrf:req.session.csrf});});
+ const leadLimit=rateLimit({windowMs:15*60*1000,limit:30,standardHeaders:'draft-8',legacyHeaders:false});
+ app.post('/api/leads',leadLimit,async(req,res)=>{
+  try{
+   const email=String(req.body.email||'').trim().toLowerCase();
+   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return res.status(400).json({error:'Please enter a valid work email.'});
+   const lead=await Lead.create({
+    name:String(req.body.name||'').slice(0,100),
+    email,
+    phone:String(req.body.phone||'').slice(0,50),
+    website:String(req.body.website||'').slice(0,200),
+    service:String(req.body.service||'Growth Audit').slice(0,100),
+    budget:String(req.body.budget||'$1,000 - $5,000').slice(0,100),
+    notes:String(req.body.notes||'').slice(0,1000),
+    source:String(req.body.source||'calculator').slice(0,100)
+   });
+   res.status(201).json({ok:true,id:lead.id,message:'Thank you! Your Growth Audit request has been received. Our team will review your website and contact you shortly.'});
+  }catch{res.status(500).json({error:'Unable to save request. Please try again.'});}
+ });
  app.use('/api',(req,res,next)=>{
-  if(['GET','HEAD','OPTIONS'].includes(req.method))return next();
+  if(['GET','HEAD','OPTIONS'].includes(req.method)||req.path==='/leads')return next();
   const token=req.get('X-CSRF-Token'),expected=req.session.csrf;
   if(req.get('Origin') && req.get('Origin')!==new URL(siteUrl).origin)return res.status(403).json({error:'Request origin is not allowed'});
   if(!token||!expected||Buffer.byteLength(token)!==Buffer.byteLength(expected)||!crypto.timingSafeEqual(Buffer.from(token),Buffer.from(expected)))return res.status(403).json({error:'Session expired. Reload and try again.'});
@@ -120,6 +151,9 @@ export function createApp({mongoUrl,secret,siteUrl,production=false,uploadDir,re
   for(let i=0;i<20;i++){if(visited.has(next))return res.status(400).json({error:'Redirect would create a loop'});visited.add(next);const row=await Redirect.findOne({from:next}).lean();if(!row)break;next=row.to;}
   const result=await Redirect.findOneAndUpdate({from},{$set:{to}},{upsert:true,new:true});await log(req,'redirect.save',from);res.json(result);
  });
+ app.get('/api/admin/leads',async(_req,res)=>res.json(await Lead.find().sort({createdAt:-1}).limit(200).lean()));
+ app.patch('/api/admin/leads/:id',async(req,res)=>{const {status}=req.body;const lead=await Lead.findByIdAndUpdate(req.params.id,{$set:{status}},{new:true});if(!lead)return res.status(404).json({error:'Lead not found'});res.json(lead);});
+ app.delete('/api/admin/leads/:id',admin,async(req,res)=>{await Lead.findByIdAndDelete(req.params.id);res.json({ok:true});});
  app.get('/api/admin/export',admin,async(req,res)=>{
   const [posts,settings,media,redirects]=await Promise.all([Post.find().lean(),getSettings(),Media.find().lean(),Redirect.find().lean()]);
   await log(req,'backup.export','content');res.attachment(`bizaipro-content-${new Date().toISOString().slice(0,10)}.json`).json({schemaVersion:1,exportedAt:new Date(),posts,settings,media,redirects});

@@ -86,6 +86,16 @@ test('SEO endpoints require authentication, isolate drafts, and find duplicate m
  const audit=await agent.get('/api/admin/seo/audit?status=draft&q=Distinct');assert.equal(audit.body.total,1);assert.equal(audit.body.items[0].id,draft.body._id);assert.ok(audit.body.items[0].checks.length>9);
  const literal=await agent.get('/api/admin/seo/links?q=%5B');assert.equal(literal.status,200);assert.equal(literal.body.length,0);
 });
+test('lead capture and management workflow',async()=>{
+ const bad=await request(app).post('/api/leads').send({email:'invalid-email'});
+ assert.equal(bad.status,400);
+ const good=await request(app).post('/api/leads').send({name:'Growth Client',email:'client@company.com',website:'https://company.com',budget:'$5,000 - $20,000'});
+ assert.equal(good.status,201);
+ assert.equal(good.body.ok,true);
+ const leads=await agent.get('/api/admin/leads');
+ assert.equal(leads.status,200);
+ assert.ok(leads.body.length>=1);
+});
 test('logout invalidates the authenticated session',async()=>{
  assert.equal((await write('post','/api/auth/logout',{})).status,200);
  assert.equal((await agent.get('/api/admin/posts')).status,401);

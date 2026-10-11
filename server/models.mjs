@@ -18,6 +18,17 @@ export const Media = model('Media', new Schema({url:{type:String,unique:true},al
 export const Revision = model('Revision', new Schema({postId:{type:Schema.Types.ObjectId,index:true},snapshot:Schema.Types.Mixed,editor:String},{timestamps:true}));
 export const Audit = model('Audit', new Schema({actor:String,action:String,target:String},{timestamps:true}));
 export const Redirect = model('Redirect', new Schema({from:{type:String,unique:true},to:String},{timestamps:true}));
+export const Lead = model('Lead', new Schema({
+  name: {type:String, trim:true, default:''},
+  email: {type:String, required:true, trim:true, lowercase:true},
+  phone: {type:String, trim:true, default:''},
+  website: {type:String, trim:true, default:''},
+  service: {type:String, default:'Growth Audit'},
+  budget: {type:String, default:'$1,000 - $5,000'},
+  notes: {type:String, default:''},
+  source: {type:String, default:'calculator'},
+  status: {type:String, enum:['new','contacted','closed','archived'], default:'new'}
+},{timestamps:true}));
 export const defaults = {
   siteName:'BizAIPro', tagline:'Smarter tools. Better business.',
   heroEyebrow:'THE PRACTICAL AI BUSINESS GUIDE', heroTitle:'Build a smarter business. One workflow at a time.',
@@ -25,7 +36,11 @@ export const defaults = {
   heroButton:'Explore the guides', heroButtonUrl:'/blog/', accentColor:'#27654b',
   logoUrl:'', footerText:'Practical AI for people building better businesses.',
   contactEmail:'', socialLinks:[],
-  navigation:[{label:'AI Tools',url:'/ai-tools/'},{label:'Automation',url:'/business-automation/'},{label:'Guides',url:'/blog/'},{label:'Free Tools',url:'/free-tools/'}],
+  adsensePublisherId:'', adsenseEnabled:true,
+  adsenseHeaderSlot:'', adsenseArticleSlot:'', adsenseSidebarSlot:'', adsenseToolSlot:'',
+  affiliateHostingerUrl:'https://hostinger.com?REFERRALCODE=BIZAIPRO',
+  affiliateMakeUrl:'https://www.make.com/en/register?pc=bizaipro',
+  navigation:[{label:'AI Tools',url:'/ai-tools/'},{label:'Automation',url:'/business-automation/'},{label:'Products',url:'/products/'},{label:'Guides',url:'/blog/'},{label:'Free Tools',url:'/free-tools/'}],
   footerLinks:[{label:'About',url:'/about/'},{label:'Contact',url:'/contact/'},{label:'Privacy',url:'/privacy-policy/'}]
 };
 export async function getSettings() { const row = await Setting.findOne({key:'site'}).lean(); return {...defaults,...row?.value}; }
